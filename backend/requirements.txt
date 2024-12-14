@@ -1,5 +1,6 @@
-Flask==2.0.1
-requests==2.26.0
-psycopg2==2.9.1
-schedule==1.1.0
-PyYAML==5.4.1
+cython
+Flask
+requests
+psycopg2
+schedule
+PyYAML
