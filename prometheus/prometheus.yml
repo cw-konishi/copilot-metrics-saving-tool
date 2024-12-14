@@ -1,0 +1,18 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Metrics Dashboard",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Metrics Over Time",
+        "targets": [
+          {
+            "expr": "rate(metrics[5m])",
+            "legendFormat": "{{instance}}"
+          }
+        ]
+      }
+    ]
+  }
+}
