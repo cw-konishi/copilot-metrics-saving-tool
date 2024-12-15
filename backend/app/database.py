@@ -50,9 +50,10 @@ def save_metrics(metrics):
             editor_id = cursor.fetchone()[0]
 
             for model in editor['models']:
+                total_engaged_users = model.get('total_engaged_users', 0)
                 cursor.execute(
                     "INSERT INTO copilot_ide_code_completions_models (editor_id, name, is_custom_model, custom_model_training_date, total_engaged_users) VALUES (%s, %s, %s, %s, %s) RETURNING id",
-                    (editor_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], model['total_engaged_users'])
+                    (editor_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], total_engaged_users)
                 )
                 model_id = cursor.fetchone()[0]
 
@@ -165,7 +166,7 @@ def get_all_metrics(since=None, until=None):
     for row in rows:
         metric_id = row[0]
         metric = {
-            'date': row[1],
+            'date':  row[1].strftime("%Y-%m-%d"),
             'total_active_users': row[2],
             'total_engaged_users': row[3],
             'copilot_ide_code_completions': {},

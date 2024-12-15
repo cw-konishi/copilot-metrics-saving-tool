@@ -1,18 +1,8 @@
-{
-  "dashboard": {
-    "id": null,
-    "title": "Metrics Dashboard",
-    "panels": [
-      {
-        "type": "graph",
-        "title": "Metrics Over Time",
-        "targets": [
-          {
-            "expr": "rate(metrics[5m])",
-            "legendFormat": "{{instance}}"
-          }
-        ]
-      }
-    ]
-  }
-}
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'copilot_metrics'
+    metrics_path: /prometheus_metrics
+    static_configs:
+      - targets: ['backend:5000']

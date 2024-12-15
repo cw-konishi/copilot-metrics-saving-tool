@@ -15,5 +15,6 @@ RUN pip install -r requirements.txt
 
 COPY app app
 COPY config.yaml config.yaml
+COPY main.py main.py
 
-CMD ["python", "app/main.py"]
+CMD ["python", "-m", "main"]

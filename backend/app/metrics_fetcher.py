@@ -2,9 +2,12 @@ import requests
 import yaml
 
 def fetch_metrics():
-    with open('config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-    
+    try:
+        with open('config.yaml', 'r') as file:
+            config = yaml.safe_load(file)
+    except FileNotFoundError:
+        return {"error": "config.yamlが開けませんでした"}
+
     org = config['github']['org']
     token = config['github']['token']
     url = f'https://api.github.com/orgs/{org}/copilot/metrics'
@@ -17,5 +20,8 @@ def fetch_metrics():
     if response.status_code == 200:
         return response.json()
     else:
-        print(f"Failed to fetch metrics: {response.status_code}")
-        return []
+        return {
+            "error": "Failed to fetch metrics",
+            "status_code": response.status_code,
+            "response": response.text
+        }
