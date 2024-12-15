@@ -2,6 +2,8 @@
 
 このプロジェクトは、GitHub Copilot Metrics APIからデータを取得し、データベースに保存し、PrometheusとGrafanaを使用して可視化するツールです。
 
+Copilot metrics APIの最新GAエンドポイント「metrics」に対応しています。
+
 ## 必要な環境
 
 - Docker
@@ -36,22 +38,22 @@ docker-compose up -d
 
 #### Grafanaダッシュボード
 
-http://localhost:3000
+http://<YOURHOST>:3000
 
-ダッシュボードセッティングはあとでなんかする
+ID/PW:admin/admin
 
 #### Prometheus
 
-必要？
+http://<YOURHOST>:9090
 
 #### APIエンドポイントアクセス
 
-http://localhost:5000
+http://<YOURHOST>:5000
 
 ##### エンドポイント一覧
 
 /fetch_now
-即座にAPIを叩いてデータを取得し、データベースに保存します。
+即座にGitHub Copilot metrics APIを叩いてデータを取得し、データベースに保存します。
 
 /metrics
 データベースに保存されているメトリクスデータをJSON形式で返します。クエリパラメータとしてsinceとuntilを指定できます。
