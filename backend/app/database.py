@@ -51,6 +51,7 @@ def save_metrics(metrics):
 
             for model in editor['models']:
                 total_engaged_users = model.get('total_engaged_users', 0)
+                custom_model_training_date = model.get('custom_model_training_date', None)
                 cursor.execute(
                     "INSERT INTO copilot_ide_code_completions_models (editor_id, name, is_custom_model, custom_model_training_date, total_engaged_users) VALUES (%s, %s, %s, %s, %s) RETURNING id",
                     (editor_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], total_engaged_users)
