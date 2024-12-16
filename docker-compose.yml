@@ -1,7 +1,15 @@
 #version: '2.31'
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      #args:
+      #  HTTP_PROXY: ${HTTP_PROXY}
+      #  HTTPS_PROXY: ${HTTPS_PROXY}
+      #  http_proxy: ${HTTP_PROXY}
+      #  https_proxy: ${HTTPS_PROXY}
+      #  no_proxy: ${NO_PROXY}
+      #  NO_PROXY: ${NO_PROXY}
     container_name: backend
     ports:
       - "5000:5000"
@@ -9,6 +17,13 @@ services:
       - ./backend:/app
     depends_on:
       - db
+    #environment:
+    #  - HTTP_PROXY=${HTTP_PROXY}
+    #  - HTTPS_PROXY=${HTTPS_PROXY}
+    #  - http_proxy=${HTTP_PROXY}
+    #  - https_proxy=${HTTPS_PROXY}
+    #  - no_proxy=${NO_PROXY}
+    #  - NO_PROXY=${NO_PROXY}
 
   prometheus:
     image: prom/prometheus
@@ -17,6 +32,13 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    #environment:
+    #  - HTTP_PROXY=${HTTP_PROXY:-}
+    #  - HTTPS_PROXY=${HTTPS_PROXY:-}
+    #  - http_proxy=${HTTP_PROXY:-}
+    #  - https_proxy=${HTTPS_PROXY:-}
+    #  - no_proxy=${NO_PROXY:-}
+    #  - NO_PROXY=${NO_PROXY:-}
 
   grafana:
     image: grafana/grafana
@@ -26,7 +48,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_INSTALL_PLUGINS=simpod-json-datasource
+    #  - HTTP_PROXY=${HTTP_PROXY:-}
+    #  - HTTPS_PROXY=${HTTPS_PROXY:-}
+    #  - http_proxy=${HTTP_PROXY:-}
+    #  - https_proxy=${HTTPS_PROXY:-}
+    #  - no_proxy=${NO_PROXY:-}
+    #  - NO_PROXY=${NO_PROXY:-}
     depends_on:
       - prometheus
 

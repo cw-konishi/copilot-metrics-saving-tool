@@ -38,30 +38,34 @@ docker-compose up -d
 
 #### Grafanaダッシュボード
 
-http://<YOURHOST>:3000
+http://YOURHOST:3000
 
 ID/PW:admin/admin
 
 #### Prometheus
 
-http://<YOURHOST>:9090
+http://YOURHOST:9090
 
 #### APIエンドポイントアクセス
 
-http://<YOURHOST>:5000
+http://YOURHOST:5000
 
 ##### エンドポイント一覧
 
-/fetch_now
+###### /fetch_now
+
 即座にGitHub Copilot metrics APIを叩いてデータを取得し、データベースに保存します。
 
-/metrics
+###### /metrics
+
 データベースに保存されているメトリクスデータをJSON形式で返します。クエリパラメータとしてsinceとuntilを指定できます。
 
-/metrics_prometheus
+###### /prometheus_metrics
+
 Prometheus形式のメトリクスデータを返します。
 
-/upload_metrics
+###### /upload_metrics
+
 過去のJSONデータを手動でアップロードしてデータベースに登録します。GETリクエストでフォームを表示し、POSTリクエストでデータをアップロードします。
 
 ## その他
