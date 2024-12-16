@@ -27,100 +27,101 @@ def save_metrics(metrics):
         metric_id = cursor.fetchone()[0]
 
         # Insert copilot_ide_code_completions
-        completions = metric['copilot_ide_code_completions']
+        completions = metric.get('copilot_ide_code_completions', {})
         cursor.execute(
             "INSERT INTO copilot_ide_code_completions (metric_id, total_engaged_users) VALUES (%s, %s) RETURNING id",
-            (metric_id, completions['total_engaged_users'])
+            (metric_id, completions.get('total_engaged_users', 0))
         )
         completion_id = cursor.fetchone()[0]
 
         # Insert copilot_ide_code_completions_languages
-        for language in completions['languages']:
+        for language in completions.get('languages', []):
             cursor.execute(
                 "INSERT INTO copilot_ide_code_completions_languages (completion_id, name, total_engaged_users) VALUES (%s, %s, %s)",
-                (completion_id, language['name'], language['total_engaged_users'])
+                (completion_id, language.get('name', 'unknown'), language.get('total_engaged_users', 0))
             )
 
         # Insert copilot_ide_code_completions_editors and models
-        for editor in completions['editors']:
+        for editor in completions.get('editors', []):
             cursor.execute(
                 "INSERT INTO copilot_ide_code_completions_editors (completion_id, name, total_engaged_users) VALUES (%s, %s, %s) RETURNING id",
-                (completion_id, editor['name'], editor['total_engaged_users'])
+                (completion_id, editor.get('name', 'unknown'), editor.get('total_engaged_users', 0))
             )
             editor_id = cursor.fetchone()[0]
 
-            for model in editor['models']:
+            for model in editor.get('models', []):
                 total_engaged_users = model.get('total_engaged_users', 0)
                 custom_model_training_date = model.get('custom_model_training_date', None)
                 cursor.execute(
                     "INSERT INTO copilot_ide_code_completions_models (editor_id, name, is_custom_model, custom_model_training_date, total_engaged_users) VALUES (%s, %s, %s, %s, %s) RETURNING id",
-                    (editor_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], total_engaged_users)
+                    (editor_id, model.get('name', 'unknown'), model.get('is_custom_model', False), custom_model_training_date, total_engaged_users)
                 )
                 model_id = cursor.fetchone()[0]
 
-                for language in model['languages']:
+                for language in model.get('languages', []):
                     cursor.execute(
                         "INSERT INTO copilot_ide_code_completions_model_languages (model_id, name, total_engaged_users, total_code_suggestions, total_code_acceptances, total_code_lines_suggested, total_code_lines_accepted) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                        (model_id, language['name'], language['total_engaged_users'], language['total_code_suggestions'], language['total_code_acceptances'], language['total_code_lines_suggested'], language['total_code_lines_accepted'])
+                        (model_id, language.get('name', 'unknown'), language.get('total_engaged_users', 0), language.get('total_code_suggestions', 0), language.get('total_code_acceptances', 0), language.get('total_code_lines_suggested', 0), language.get('total_code_lines_accepted', 0))
                     )
 
         # Insert copilot_ide_chat
-        chat = metric['copilot_ide_chat']
+        chat = metric.get('copilot_ide_chat', {})
         cursor.execute(
             "INSERT INTO copilot_ide_chat (metric_id, total_engaged_users) VALUES (%s, %s) RETURNING id",
-            (metric_id, chat['total_engaged_users'])
+            (metric_id, chat.get('total_engaged_users', 0))
         )
         chat_id = cursor.fetchone()[0]
 
         # Insert copilot_ide_chat_editors and models
-        for editor in chat['editors']:
+        for editor in chat.get('editors', []):
             cursor.execute(
                 "INSERT INTO copilot_ide_chat_editors (chat_id, name, total_engaged_users) VALUES (%s, %s, %s) RETURNING id",
-                (chat_id, editor['name'], editor['total_engaged_users'])
+                (chat_id, editor.get('name', 'unknown'), editor.get('total_engaged_users', 0))
             )
             editor_id = cursor.fetchone()[0]
 
-            for model in editor['models']:
+            for model in editor.get('models', []):
+                custom_model_training_date = model.get('custom_model_training_date', None)
                 cursor.execute(
                     "INSERT INTO copilot_ide_chat_models (editor_id, name, is_custom_model, custom_model_training_date, total_engaged_users, total_chats, total_chat_insertion_events, total_chat_copy_events) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                    (editor_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], model['total_engaged_users'], model['total_chats'], model['total_chat_insertion_events'], model['total_chat_copy_events'])
+                    (editor_id, model.get('name', 'unknown'), model.get('is_custom_model', False), custom_model_training_date, model.get('total_engaged_users', 0), model.get('total_chats', 0), model.get('total_chat_insertion_events', 0), model.get('total_chat_copy_events', 0))
                 )
 
         # Insert copilot_dotcom_chat
-        dotcom_chat = metric['copilot_dotcom_chat']
+        dotcom_chat = metric.get('copilot_dotcom_chat', {})
         cursor.execute(
             "INSERT INTO copilot_dotcom_chat (metric_id, total_engaged_users) VALUES (%s, %s) RETURNING id",
-            (metric_id, dotcom_chat['total_engaged_users'])
+            (metric_id, dotcom_chat.get('total_engaged_users', 0))
         )
         dotcom_chat_id = cursor.fetchone()[0]
 
         # Insert copilot_dotcom_chat_models
-        for model in dotcom_chat['models']:
+        for model in dotcom_chat.get('models', []):
             cursor.execute(
                 "INSERT INTO copilot_dotcom_chat_models (chat_id, name, is_custom_model, custom_model_training_date, total_engaged_users, total_chats) VALUES (%s, %s, %s, %s, %s, %s)",
-                (dotcom_chat_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], model['total_engaged_users'], model['total_chats'])
+                (dotcom_chat_id, model.get('name', 'unknown'), model.get('is_custom_model', False), model.get('custom_model_training_date', None), model.get('total_engaged_users', 0), model.get('total_chats', 0))
             )
 
         # Insert copilot_dotcom_pull_requests
-        pull_requests = metric['copilot_dotcom_pull_requests']
+        pull_requests = metric.get('copilot_dotcom_pull_requests', {})
         cursor.execute(
             "INSERT INTO copilot_dotcom_pull_requests (metric_id, total_engaged_users) VALUES (%s, %s) RETURNING id",
-            (metric_id, pull_requests['total_engaged_users'])
+            (metric_id, pull_requests.get('total_engaged_users', 0))
         )
         pull_request_id = cursor.fetchone()[0]
 
         # Insert copilot_dotcom_pull_requests_repositories and models
-        for repository in pull_requests['repositories']:
+        for repository in pull_requests.get('repositories', []):
             cursor.execute(
                 "INSERT INTO copilot_dotcom_pull_requests_repositories (pull_request_id, name, total_engaged_users) VALUES (%s, %s, %s) RETURNING id",
-                (pull_request_id, repository['name'], repository['total_engaged_users'])
+                (pull_request_id, repository.get('name', 'unknown'), repository.get('total_engaged_users', 0))
             )
             repository_id = cursor.fetchone()[0]
 
-            for model in repository['models']:
+            for model in repository.get('models', []):
                 cursor.execute(
                     "INSERT INTO copilot_dotcom_pull_requests_models (repository_id, name, is_custom_model, custom_model_training_date, total_pr_summaries_created, total_engaged_users) VALUES (%s, %s, %s, %s, %s, %s)",
-                    (repository_id, model['name'], model['is_custom_model'], model['custom_model_training_date'], model['total_pr_summaries_created'], model['total_engaged_users'])
+                    (repository_id, model.get('name', 'unknown'), model.get('is_custom_model', False), model.get('custom_model_training_date', None), model.get('total_pr_summaries_created', 0), model.get('total_engaged_users', 0))
                 )
 
     conn.commit()
