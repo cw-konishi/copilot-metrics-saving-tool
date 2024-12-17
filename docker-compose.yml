@@ -47,7 +47,7 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
     ports:
       - "3000:3000"
-    environment:
+    #environment:
     #  - HTTP_PROXY=${HTTP_PROXY:-}
     #  - HTTPS_PROXY=${HTTPS_PROXY:-}
     #  - http_proxy=${HTTP_PROXY:-}
