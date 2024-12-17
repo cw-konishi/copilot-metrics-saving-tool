@@ -1,0 +1,74 @@
+#version: '2.31'
+services:
+  backend:
+    build:
+      context: ./backend
+      #args:
+      #  HTTP_PROXY: ${HTTP_PROXY}
+      #  HTTPS_PROXY: ${HTTPS_PROXY}
+      #  http_proxy: ${HTTP_PROXY}
+      #  https_proxy: ${HTTPS_PROXY}
+      #  no_proxy: ${NO_PROXY}
+      #  NO_PROXY: ${NO_PROXY}
+    container_name: backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    #environment:
+    #  - HTTP_PROXY=${HTTP_PROXY}
+    #  - HTTPS_PROXY=${HTTPS_PROXY}
+    #  - http_proxy=${HTTP_PROXY}
+    #  - https_proxy=${HTTPS_PROXY}
+    #  - no_proxy=${NO_PROXY}
+    #  - NO_PROXY=${NO_PROXY}
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    #environment:
+    #  - HTTP_PROXY=${HTTP_PROXY:-}
+    #  - HTTPS_PROXY=${HTTPS_PROXY:-}
+    #  - http_proxy=${HTTP_PROXY:-}
+    #  - https_proxy=${HTTPS_PROXY:-}
+    #  - no_proxy=${NO_PROXY:-}
+    #  - NO_PROXY=${NO_PROXY:-}
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    #environment:
+    #  - HTTP_PROXY=${HTTP_PROXY:-}
+    #  - HTTPS_PROXY=${HTTPS_PROXY:-}
+    #  - http_proxy=${HTTP_PROXY:-}
+    #  - https_proxy=${HTTPS_PROXY:-}
+    #  - no_proxy=${NO_PROXY:-}
+    #  - NO_PROXY=${NO_PROXY:-}
+    depends_on:
+      - prometheus
+
+  db:
+    image: postgres:13
+    container_name: db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: metrics_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+
+volumes:
+  db_data:

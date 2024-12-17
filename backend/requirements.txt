@@ -1,0 +1,6 @@
+cython
+Flask
+requests
+psycopg2
+schedule
+PyYAML
