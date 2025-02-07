@@ -81,8 +81,12 @@ def convert_to_prometheus_format(metrics_data):
                     language_name = language['name']
                     total_code_suggestions = language['total_code_suggestions']
                     total_code_acceptances = language['total_code_acceptances']
+                    total_code_lines_suggestions = language['total_code_lines_suggestions']
+                    total_code_lines_accepted = language['total_code_lines_accepted']
                     lines.append(f'total_code_suggestions{{date="{date}", editor="{editor_name}", model="{model_name}", language="{language_name}"}} {total_code_suggestions}')
                     lines.append(f'total_code_acceptances{{date="{date}", editor="{editor_name}", model="{model_name}", language="{language_name}"}} {total_code_acceptances}')
+                    lines.append(f'total_code_lines_suggestions{{date="{date}", editor="{editor_name}", model="{model_name}", language="{language_name}"}} {total_code_lines_suggestions}')
+                    lines.append(f'total_code_lines_accepted{{date="{date}", editor="{editor_name}", model="{model_name}", language="{language_name}"}} {total_code_lines_accepted}')
         
         # Copilot IDE Chat
         for editor in metric['copilot_ide_chat']['editors']:
